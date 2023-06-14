@@ -1,0 +1,17 @@
+C:\Users\Dell\Source\Repos\Sudoko\Sudoko\bin\Debug\net6.0-windows\Sudoko.exe
+C:\Users\Dell\Source\Repos\Sudoko\Sudoko\bin\Debug\net6.0-windows\Sudoko.deps.json
+C:\Users\Dell\Source\Repos\Sudoko\Sudoko\bin\Debug\net6.0-windows\Sudoko.runtimeconfig.json
+C:\Users\Dell\Source\Repos\Sudoko\Sudoko\bin\Debug\net6.0-windows\Sudoko.dll
+C:\Users\Dell\Source\Repos\Sudoko\Sudoko\bin\Debug\net6.0-windows\Sudoko.pdb
+C:\Users\Dell\Source\Repos\Sudoko\Sudoko\obj\Debug\net6.0-windows\Sudoko.csproj.AssemblyReference.cache
+C:\Users\Dell\Source\Repos\Sudoko\Sudoko\obj\Debug\net6.0-windows\Sudoko.Form1.resources
+C:\Users\Dell\Source\Repos\Sudoko\Sudoko\obj\Debug\net6.0-windows\Sudoko.csproj.GenerateResource.cache
+C:\Users\Dell\Source\Repos\Sudoko\Sudoko\obj\Debug\net6.0-windows\Sudoko.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Dell\Source\Repos\Sudoko\Sudoko\obj\Debug\net6.0-windows\Sudoko.AssemblyInfoInputs.cache
+C:\Users\Dell\Source\Repos\Sudoko\Sudoko\obj\Debug\net6.0-windows\Sudoko.AssemblyInfo.cs
+C:\Users\Dell\Source\Repos\Sudoko\Sudoko\obj\Debug\net6.0-windows\Sudoko.csproj.CoreCompileInputs.cache
+C:\Users\Dell\Source\Repos\Sudoko\Sudoko\obj\Debug\net6.0-windows\Sudoko.dll
+C:\Users\Dell\Source\Repos\Sudoko\Sudoko\obj\Debug\net6.0-windows\refint\Sudoko.dll
+C:\Users\Dell\Source\Repos\Sudoko\Sudoko\obj\Debug\net6.0-windows\Sudoko.pdb
+C:\Users\Dell\Source\Repos\Sudoko\Sudoko\obj\Debug\net6.0-windows\Sudoko.genruntimeconfig.cache
+C:\Users\Dell\Source\Repos\Sudoko\Sudoko\obj\Debug\net6.0-windows\ref\Sudoko.dll
