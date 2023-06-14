@@ -32,7 +32,7 @@ namespace Sudoko
             this.WindowState = FormWindowState.Maximized;
             offset = new Bitmap(this.Width, this.Height);
             visualizer = new Visualizer();
-            this.grid = MakeBoard();
+            this.grid = SeedBoard(MakeBoard(),9);
 
         }
         List<List<Cell>> MakeBoard()
@@ -50,6 +50,38 @@ namespace Sudoko
             }
             return board;
         }
+        int Choice(List<int> list)
+
+        {
+            // implementation of the Choice function in python
+            Random random = new Random();
+            return list[random.Next(list.Count)];
+
+        }
+        List<List<Cell>> SeedBoard(List<List<Cell>> board, int ct)
+        {
+            // input : the board to be seeded and the number of seeds 
+            // output : seeded board
+
+
+            Random random = new Random();
+            List<int> list_of_numbers = new List<int>();
+            for (int i=0;i<9;i++)
+            {
+                list_of_numbers.Add(i + 1);
+            }
+            int r, c;
+            for (int i=0;i<ct;i++)
+            {
+                r = random.Next(board.Count);
+                c = random.Next(board.Count);
+                board[r][c].value = Choice(list_of_numbers);
+                list_of_numbers.Remove(board[r][c].value);
+
+            }
+            return board;
+        }
+
 
     }
 }

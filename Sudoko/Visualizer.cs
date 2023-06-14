@@ -19,6 +19,7 @@
                 for (int k = 0; k < cells[i].Count; k++)
                 {
                     g.DrawRectangle(Pens.White, cells[i][k].dimensions);
+                    if (cells[i][k].value == -1) { continue; }
                     PointF point = CalcMidPoint(cells[i][k].dimensions);
                     // Set the font and brush for drawing the value
                     Font font = new Font("Arial", 12);
