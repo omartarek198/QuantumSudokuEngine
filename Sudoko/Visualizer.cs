@@ -13,12 +13,20 @@
         public void DrawScene(Graphics g, List<List<Cell>> cells)
         {
             g.Clear(Color.Black);
-
+         
             for (int i = 0; i < cells.Count; i++)
             {
                 for (int k = 0; k < cells[i].Count; k++)
                 {
-                    g.DrawRectangle(Pens.White, cells[i][k].dimensions);
+                    if ( false) //testing something
+                    {
+                        g.DrawRectangle(Pens.Red, cells[i][k].dimensions);
+
+                    }
+                    else { 
+                      g.DrawRectangle(new Pen(cells[i][k].color), cells[i][k].dimensions);
+
+                    }
                     if (cells[i][k].value == -1) { continue; }
                     PointF point = CalcMidPoint(cells[i][k].dimensions);
                     // Set the font and brush for drawing the value
