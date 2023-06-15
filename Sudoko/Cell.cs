@@ -14,6 +14,7 @@ namespace Sudoko
         public int value = -1;
         public bool set = false;
         public Color color = Color.White;
+        public int R, C;
 
         public Cell(Rectangle dims) 
         { 
@@ -22,6 +23,19 @@ namespace Sudoko
             {
                 possible_numbers.Add(i);
             }
+        }
+        //copy constructor
+        public Cell(Cell obj_to_copy_from) 
+        {
+            this.dimensions = obj_to_copy_from.dimensions;
+            this.value = obj_to_copy_from.value;
+            this.set = obj_to_copy_from.set;
+            this.color = Color.White;
+            this.possible_numbers = new List<int>(obj_to_copy_from.possible_numbers);
+            this.R = obj_to_copy_from.R; 
+            this.C = obj_to_copy_from.C;
+
+
         }
 
         public void ReduceEntropy(int value)

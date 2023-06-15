@@ -1,9 +1,11 @@
+using System.Collections.Generic;
+
 namespace Sudoko
 {
     public partial class Form1 : Form
     {
         Visualizer visualizer;
-        List<List<Cell>> grid;
+        List<List<Cell>> griid;
         System.Windows.Forms.Timer T = new System.Windows.Forms.Timer();
         Bitmap offset;
 
@@ -17,13 +19,13 @@ namespace Sudoko
         private void T_Tick(object? sender, EventArgs e)
 
         {
-            visualizer.Draw(CreateGraphics(), offset, this.grid);
+              
         }
 
         public void Form1_Paint(object? sender, PaintEventArgs e)
         {
 
-            visualizer.Draw(CreateGraphics(), offset, this.grid);
+            visualizer.Draw(CreateGraphics(), offset, this.griid);
             //T.Start();
         }
 
@@ -34,17 +36,17 @@ namespace Sudoko
             visualizer = new Visualizer();
             MakeBoard();
             SeedBoard(25);
-            visualizer.Draw(CreateGraphics(), offset, this.grid);
-            solve();
+            visualizer.Draw(CreateGraphics(), offset, this.griid);
+            solve(ref this.griid);
           
         }
         void MakeBoard()
         {
-            this.grid = new List<List<Cell>>();
+            this.griid = new List<List<Cell>>();
             for (int i = 0; i < 9; i++)
             {
 
-                grid.Add(new List<Cell>());
+                griid.Add(new List<Cell>());
                 for (int k = 0; k < 9; k++)
                 {
                     
@@ -53,7 +55,9 @@ namespace Sudoko
 
                     }
                     Cell cell = new Cell(new Rectangle(75 * k + 700, 75 * i+100, 75, 75));
-                    grid[i].Add(cell);
+                    cell.R = i;
+                    cell.C = k;
+                    griid[i].Add(cell);
                 }
             }
         }
@@ -73,13 +77,13 @@ namespace Sudoko
            
 
         }
-        void WhitenBoard()
+        void WhitenBoard(List<List<Cell>>grid)
         {
-            for (int i = 0; i < this.grid.Count; i++)
+            for (int i = 0; i <  grid.Count; i++)
             {
-                for (int j = 0; j < this.grid.Count; j++)
+                for (int j = 0; j <  grid.Count; j++)
                 {
-                    this.grid[i][j].color = Color.White;
+                     grid[i][j].color = Color.White;
 
                 }
             }
@@ -95,25 +99,27 @@ namespace Sudoko
             int r, c;
             for (int i=0;i<ct;i++)
             {
-                r = random.Next(grid.Count);
-                c = random.Next(grid.Count);
+                r = random.Next(griid.Count);
+                c = random.Next(griid.Count);
 
-                grid[r][c].value = Choice(grid[r][c].possible_numbers);
-                grid[r][c].set = true;
-                if (grid[r][c].value == -1)
+                griid[r][c].value = Choice(griid[r][c].possible_numbers);
+                griid[r][c].set = true;
+                if (griid[r][c].value == -1)
                 {
                     MessageBox.Show("Contradiction at" + i.ToString());
                 }
-                UpdateEntropy(r, c);
+                UpdateEntropy(this.griid,r, c);
                
             }
         }
-        bool Solved()
+        
+        bool Solved(List<List<Cell>> grid)
         {
+            //check if grid is solved
             int ct = 0;
-            for (int i = 0; i < this.grid.Count; i++)
+            for (int i = 0; i < grid.Count; i++)
             {
-                for (int j = 0; j < this.grid.Count; j++)
+                for (int j = 0; j < grid.Count; j++)
                 {
                     if (grid[i][j].value !=-1)
                     {
@@ -124,21 +130,82 @@ namespace Sudoko
             }
             return ct == 80;
         }
-        void solve()
+        int solve(ref List<List<Cell>> grid)
         {
-            while (!Solved())
+            PriorityQueue<Cell, int> moves = GetMinimumEntropy(grid); //sending the grid not the copied grid 
+
+            while (true)
             {
-                 List<Point> cells = GetMinimumEntropy();
-                grid[cells[0].X][cells[0].Y].value = Choice(grid[cells[0].X][cells[0].Y].possible_numbers);
-                grid[cells[0].X][cells[0].Y].set = true;
-                grid[cells[0].X][cells[0].Y].possible_numbers.Clear();
-                visualizer.Draw(CreateGraphics(), offset, this.grid);
-                UpdateEntropy(cells[0].X, cells[0].Y);
-                visualizer.Draw(CreateGraphics(), offset, this.grid);
-                WhitenBoard();
-                visualizer.Draw(CreateGraphics(), offset, this.grid);
+                if (moves.Count == 0)
+                    return -1;
+                Cell cell_to_set = moves.Dequeue();
+                if (cell_to_set.possible_numbers.Count == 0)
+                    return -1;
+                List<List<Cell>> copied_grid;
+                for (int i=0;i<cell_to_set.possible_numbers.Count;i++)
+                {
+                     copied_grid = CloneGrid(grid);
+
+                    copied_grid[cell_to_set.R][cell_to_set.C].value = cell_to_set.possible_numbers[i];
+                    copied_grid[cell_to_set.R][cell_to_set.C].set = true;
+
+                    copied_grid[cell_to_set.R][cell_to_set.C].possible_numbers.Clear();
+
+                    visualizer.Draw(CreateGraphics(), offset, copied_grid);
+
+                    UpdateEntropy(copied_grid, cell_to_set.R, cell_to_set.C);
+
+                    visualizer.Draw(CreateGraphics(), offset, copied_grid);
+
+                    WhitenBoard(copied_grid);
+
+                    visualizer.Draw(CreateGraphics(), offset, copied_grid);
+
+
+                    if (!Solved(copied_grid))
+                        solve(ref copied_grid);
+                    else
+                    {
+                        GreenBoarD(copied_grid);
+                        visualizer.Draw(CreateGraphics(), offset, copied_grid);
+                        Console.WriteLine("AAAAA");
+
+                    }
+
+
+
+
+
+
+
+                }
+
+                //grid[cells[0].X][cells[0].Y].value = Choice(grid[cells[0].X][cells[0].Y].possible_numbers);
+                //grid[cells[0].X][cells[0].Y].set = true;
+                //grid[cells[0].X][cells[0].Y].possible_numbers.Clear();
+                //visualizer.Draw(CreateGraphics(), offset, this.grid);
+                //UpdateEntropy(cells[0].X, cells[0].Y);
+                //visualizer.Draw(CreateGraphics(), offset, this.grid);
+                //WhitenBoard();
+                //visualizer.Draw(CreateGraphics(), offset, this.grid);
+
+
+
+
+
             }
 
+        }
+
+        void GreenBoarD(List<List<Cell>> board)
+        {
+            for (int i=0;i<board.Count;i++)
+            {
+                for (int k =0;k<board.Count;k++)
+                {
+                    board[i][k].color = Color.Green;
+                }
+            }
         }
         PriorityQueue<Cell, int> GetMinimumEntropy(List<List<Cell>> board)
         {
@@ -157,7 +224,7 @@ namespace Sudoko
           
             return priorityQueue;
         }
-        void UpdateEntropy(int r,int c)
+        void UpdateEntropy(List<List<Cell>> grid, int r,int c)
 
         {
             //called upon setting a value for grid[r][c]
@@ -207,17 +274,17 @@ namespace Sudoko
             { 
                 for (int k = start_col; k<end_col; k++)
                 {
-                    this.grid[i][k].ReduceEntropy(this.grid[r][c].value);
-                    this.grid[i][k].color = Color.Green;
+                     grid[i][k].ReduceEntropy( grid[r][c].value);
+                     grid[i][k].color = Color.Green;
                 }
             }
 
-            for (int i =0;i<this.grid.Count;i++)
+            for (int i =0;i< grid.Count;i++)
             {
-                this.grid[r][i].ReduceEntropy(this.grid[r][c].value);
-                this.grid[r][i].color = Color.Green;
-                this.grid[i][c].ReduceEntropy(this.grid[r][c].value);
-                this.grid[i][c].color = Color.Green;
+                 grid[r][i].ReduceEntropy( grid[r][c].value);
+                 grid[r][i].color = Color.Green;
+                 grid[i][c].ReduceEntropy( grid[r][c].value);
+                 grid[i][c].color = Color.Green;
 
 
             }
@@ -228,7 +295,23 @@ namespace Sudoko
 
 
 
+        List<List<Cell>> CloneGrid(List<List<Cell>> grid)
+        {
+            List<List<Cell>> clone = new List<List<Cell>>();
+            for (int i = 0; i < 9; i++)
+            {
 
+                clone.Add(new List<Cell>());
+                for (int k = 0; k < 9; k++)
+                {
+
+
+                    clone[i].Add(new Cell(grid[i][k]));
+                }
+            }
+
+            return clone;
+        }
     }
-
+ 
 }
