@@ -93,7 +93,7 @@ namespace Sudoko
             Random random = new Random();
           
             int r, c;
-            for (int i=0;i<ct-1;i++)
+            for (int i=0;i<ct;i++)
             {
                 r = random.Next(grid.Count);
                 c = random.Next(grid.Count);
@@ -140,28 +140,22 @@ namespace Sudoko
             }
 
         }
-        List<Point> GetMinimumEntropy()
+        PriorityQueue<Cell, int> GetMinimumEntropy(List<List<Cell>> board)
         {
-            List<Point> points = new List<Point>();
-            int min = 1000000;
-            for (int i=0;i<this.grid.Count;i++)
+            //returns a list containing all unset cells sorted based on each cell's entropy
+            PriorityQueue<Cell,int> priorityQueue = new PriorityQueue<Cell,int>();
+            for (int i=0;i<board.Count;i++)
             {
-                for (int j = 0; j < this.grid.Count; j++)
+                for (int k=0;k<board.Count;k++)
                 {
-                    if (grid[i][j].set) continue;
-                    if (grid[i][j].possible_numbers.Count == min)
+                    if (!board[i][k].set)
                     {
-                        points.Add(new Point(i, j)); // couldnt find pair class in c# :D
-                    }
-                    else if (grid[i][j].possible_numbers.Count< min)
-                    {
-                        points = new List<Point>();
-                        points.Add(new Point(i, j));
-                        min = grid[i][j].possible_numbers.Count;
+                        priorityQueue.Enqueue(board[i][k], board[i][k].possible_numbers.Count); // i love data structures
                     }
                 }
             }
-            return points;
+          
+            return priorityQueue;
         }
         void UpdateEntropy(int r,int c)
 
